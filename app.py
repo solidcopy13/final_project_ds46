@@ -117,7 +117,7 @@ else:
 
             # --- Fungsi Prediksi ---
             def classify_customer_segment(df_final):
-                with open('best_svm_model.pkl', 'rb') as file:
+                with open('knn_model.pkl', 'rb') as file:
                     model = pickle.load(file)
 
                 pred = model.predict(df_final)
