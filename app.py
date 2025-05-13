@@ -7,7 +7,7 @@ import pickle
 
 # Konfigurasi halaman Streamlit
 st.set_page_config(page_title="Customer Segmentation", layout="wide")
-st.title("📊 Customer Segmentation App")
+st.title("Customer Segmentation App")
 
 st.markdown("""
     Selamat datang di **Aplikasi Segmentasi Pelanggan**!  
@@ -24,7 +24,7 @@ st.markdown("""
 """)
 
 # Upload file
-upload_file = st.file_uploader('📤 Upload file CSV Anda di sini', type='csv')
+upload_file = st.file_uploader('Upload file CSV Anda di sini', type='csv')
 
 # Jika belum upload, tampilkan info
 if upload_file is None:
@@ -117,7 +117,7 @@ else:
 
             # --- Fungsi Prediksi ---
             def classify_customer_segment(df_final):
-                with open('knn_model.pkl', 'rb') as file:
+                with open('svm_mode2l.pkl', 'rb') as file:
                     model = pickle.load(file)
 
                 pred = model.predict(df_final)
@@ -129,14 +129,14 @@ else:
             df_segmented = classify_customer_segment(df_final)
 
             # --- Dashboard ---
-            st.title("📈 Dashboard Segmentasi Pelanggan")
+            st.title("Dashboard Segmentasi Pelanggan")
             df['Segmentation'] = df_segmented['Segmentation']
 
             with st.container():
                 col1, col2 = st.columns([1, 1], gap="large")
 
                 with col1:
-                    st.subheader("🎯 Visualisasi Segmen Pelanggan")
+                    st.subheader("Visualisasi Segmen Pelanggan")
                     seg_count = df['Segmentation'].value_counts().sort_index()
                     seg_percent = seg_count / seg_count.sum()
                     st.dataframe(seg_percent.rename("Normalized"))
@@ -153,7 +153,7 @@ else:
 
 
                 with col2:
-                    st.subheader("🏆 Segmentasi Terbanyak")
+                    st.subheader("Segmentasi Terbanyak")
 
                     most_common_segment = df['Segmentation'].mode()[0]
                     count_most_common = df['Segmentation'].value_counts()[most_common_segment]
@@ -182,7 +182,7 @@ else:
                     avg_age = df_most_common['Age'].median()
                     avg_family_size = df_most_common['Family_Size'].median()
 
-                    st.subheader("🔍 Karakteristik Pelanggan")
+                    st.subheader("Karakteristik Pelanggan Segmentasi Mayoritas")
 
                     metric_rows = [
                         [("Sudah Menikah", f"{married_count} org"),
@@ -199,9 +199,9 @@ else:
                             col.metric(label, value)
 
                                     # Tampilkan data
-                    st.subheader("📋 Data Asli Pelanggan + Segmentasi")
+                    st.subheader("Data Asli Pelanggan + Segmentasi")
                     st.dataframe(df_copy)
-            st.title("💡 Insight Segmentasi & Strategi Pemasaran")
+            st.title("Insight Segmentasi & Strategi Pemasaran")
 
             summary = df_copy.groupby("Segmentation").agg({
                 "Age": "mean",
@@ -225,7 +225,7 @@ else:
                         spending_avg = score_dict.get('Average', 0)
                         spending_high = score_dict.get('High', 0)
 
-                        st.subheader(f"🧩 {label_map[seg_label]}")
+                        st.subheader(f"{label_map[seg_label]}")
                         st.markdown(f"""
                         **Profil:**  
                         - Rata-rata usia: **{row['Age']:.1f} tahun**  
@@ -257,7 +257,7 @@ else:
                         spending_avg = score_dict.get('Average', 0)
                         spending_high = score_dict.get('High', 0)
 
-                        st.subheader(f"🧩 {label_map[seg_label]}")
+                        st.subheader(f"{label_map[seg_label]}")
                         st.markdown(f"""
                         **Profil:**  
                         - Rata-rata usia: **{row['Age']:.1f} tahun**  
@@ -280,13 +280,13 @@ else:
                         }
                         st.markdown(strategi_map[seg_label])
 
-            st.subheader("📊 Ringkasan Ukuran & Potensi Segmen")
+            st.subheader("Ringkasan Ukuran & Potensi Segmen")
             ringkasan_tabel = summary[['Jumlah Pelanggan']].copy()
             ringkasan_tabel['Potensi Pasar'] = ['Tinggi', 'Menengah', 'Menengah-Tinggi', 'Tinggi']
             ringkasan_tabel.index = [label_map[i] for i in ringkasan_tabel.index]
             st.dataframe(ringkasan_tabel)
 
-            st.subheader("🔎 Perbedaan Karakteristik Demografis & Perilaku per Segmen")
+            st.subheader("Perbedaan Karakteristik Demografis & Perilaku per Segmen")
             karakter_df = summary[['Age', 'Work_Experience', 'Family_Size', 'Profession']].copy()
             karakter_df.columns = ['Rata-rata Usia', 'Work Exp', 'Family Size', 'Profesi Dominan']
             karakter_df.index = [label_map[i] for i in karakter_df.index]
